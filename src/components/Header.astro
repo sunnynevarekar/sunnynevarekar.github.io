@@ -1,0 +1,238 @@
+---
+import { getEntry } from 'astro:content';
+import GitHubIcon from './GitHubIcon.astro';
+import LinkedInIcon from './LinkedInIcon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import HamburgerIcon from './HamburgerIcon.astro';
+import CloseIcon from './CloseIcon.astro';
+
+const aboutEntry = await getEntry('about', 'index');
+const data = aboutEntry.data;
+
+export interface Props {
+  currentPage?: 'home' | 'blog' | 'blog-post';
+}
+
+const { currentPage = 'home' } = Astro.props;
+---
+
+<header class="flex justify-between items-center relative">
+  <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 font-mono tracking-tight">
+    <a href="/" class="hover:text-gray-600 dark:hover:text-gray-400 transition-colors">
+      {data.name}
+    </a>
+  </h1>
+
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:flex gap-3 text-sm items-center">
+    <ThemeToggle class="w-4 h-4 pb-1" />
+    <span class="text-gray-400 dark:text-gray-500">·</span>
+    {currentPage === 'home' ? (
+      <span class="text-gray-900 dark:text-gray-100 font-mono tracking-wider uppercase font-bold border-b-2 border-blue-600 dark:border-blue-400 pb-1">
+        HOME
+      </span>
+    ) : (
+      <a href="/" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 font-mono tracking-wider uppercase font-medium hover:border-b-2 hover:border-blue-300 dark:hover:border-blue-500 pb-1">
+        HOME
+      </a>
+    )}
+    <span class="text-gray-400 dark:text-gray-500">·</span>
+    {currentPage === 'blog' ? (
+      <span class="text-gray-900 dark:text-gray-100 font-mono tracking-wider uppercase font-bold border-b-2 border-blue-600 dark:border-blue-400 pb-1">
+        BLOG
+      </span>
+    ) : (
+      <a href="/blog" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-all duration-200 font-mono tracking-wider uppercase font-medium hover:border-b-2 hover:border-blue-300 dark:hover:border-blue-500 pb-1">
+        BLOG
+      </a>
+    )}
+    <span class="text-gray-400 dark:text-gray-500">·</span>
+    <a href={data.github} target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors pb-1" aria-label="GitHub">
+      <GitHubIcon class="w-4 h-4" />
+    </a>
+    <span class="text-gray-400 dark:text-gray-500">·</span>
+    <a href={data.linkedin} target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors pb-1" aria-label="LinkedIn">
+      <LinkedInIcon class="w-4 h-4" />
+    </a>
+  </nav>
+
+  <!-- Mobile Navigation Button -->
+  <button 
+    id="mobile-menu-button"
+    class="md:hidden flex items-center justify-center w-10 h-10 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+    aria-label="Toggle mobile menu"
+    aria-expanded="false"
+  >
+    <HamburgerIcon class="w-6 h-6 hamburger-icon" />
+    <CloseIcon class="w-6 h-6 close-icon hidden" />
+  </button>
+
+  <!-- Mobile Navigation Menu -->
+  <nav 
+    id="mobile-menu"
+    class="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 hidden md:hidden z-50"
+  >
+    <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+      <button
+        id="mobile-theme-toggle"
+        class="w-4 h-4 inline-block mr-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+        aria-label="Toggle theme"
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg 
+          class="mobile-sun-icon hidden" 
+          fill="currentColor" 
+          viewBox="0 0 20 20"
+        >
+          <path 
+            fill-rule="evenodd" 
+            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" 
+            clip-rule="evenodd"
+          />
+        </svg>
+        
+        <!-- Moon icon (shown in light mode) -->
+        <svg 
+          class="mobile-moon-icon" 
+          fill="currentColor" 
+          viewBox="0 0 20 20"
+        >
+          <path 
+            d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+          />
+        </svg>
+      </button>
+      <span class="text-sm text-gray-600 dark:text-gray-400">Theme</span>
+    </div>
+    
+    <div class="py-1">
+      {currentPage === 'home' ? (
+        <span class="block px-4 py-2 text-sm font-mono tracking-wider uppercase font-bold text-blue-600 dark:text-blue-400 bg-gray-50 dark:bg-gray-800">
+          HOME
+        </span>
+      ) : (
+        <a 
+          href="/" 
+          class="block px-4 py-2 text-sm font-mono tracking-wider uppercase font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          HOME
+        </a>
+      )}
+      
+      {currentPage === 'blog' ? (
+        <span class="block px-4 py-2 text-sm font-mono tracking-wider uppercase font-bold text-blue-600 dark:text-blue-400 bg-gray-50 dark:bg-gray-800">
+          BLOG
+        </span>
+      ) : (
+        <a 
+          href="/blog" 
+          class="block px-4 py-2 text-sm font-mono tracking-wider uppercase font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          BLOG
+        </a>
+      )}
+    </div>
+    
+    <div class="border-t border-gray-200 dark:border-gray-700 py-1">
+      <a 
+        href={data.github} 
+        target="_blank" 
+        class="flex items-center px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        aria-label="GitHub"
+      >
+        <GitHubIcon class="w-4 h-4 mr-3" />
+        GitHub
+      </a>
+      
+      <a 
+        href={data.linkedin} 
+        target="_blank" 
+        class="flex items-center px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        aria-label="LinkedIn"
+      >
+        <LinkedInIcon class="w-4 h-4 mr-3" />
+        LinkedIn
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Mobile menu toggle functionality
+  function initMobileMenu() {
+    const menuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerIcon = menuButton?.querySelector('.hamburger-icon');
+    const closeIcon = menuButton?.querySelector('.close-icon');
+
+    if (!menuButton || !mobileMenu || !hamburgerIcon || !closeIcon) return;
+
+    let isOpen = false;
+
+    function toggleMenu() {
+      isOpen = !isOpen;
+      
+      if (isOpen) {
+        mobileMenu.classList.remove('hidden');
+        hamburgerIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        menuButton.setAttribute('aria-expanded', 'true');
+      } else {
+        mobileMenu.classList.add('hidden');
+        hamburgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function closeMenu() {
+      if (isOpen) {
+        isOpen = false;
+        mobileMenu.classList.add('hidden');
+        hamburgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    menuButton.addEventListener('click', toggleMenu);
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menuButton.contains(e.target as Node) && !mobileMenu.contains(e.target as Node)) {
+        closeMenu();
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMenu();
+      }
+    });
+
+    // Close menu when navigating
+    mobileMenu.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A') {
+        closeMenu();
+      }
+    });
+
+    // Mobile theme toggle functionality
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    if (mobileThemeToggle) {
+      mobileThemeToggle.addEventListener('click', () => {
+        if (typeof window.toggleTheme === 'function') {
+          window.toggleTheme();
+        }
+      });
+    }
+  }
+
+  // Initialize on DOM content loaded
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+
+  // Re-initialize on view transitions (for Astro)
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

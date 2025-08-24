@@ -1,0 +1,207 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ThemeScript from '../components/ThemeScript.astro';
+import SEO from '../components/SEO.astro';
+import { extractDescription } from '../utils/extractDescription.js';
+
+// Get all blog posts
+const allBlogPosts = await getCollection('blog');
+
+// Sort by publication date (newest first)
+const sortedPosts = allBlogPosts.sort((a, b) => 
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+// Filter out draft posts
+const publishedPosts = sortedPosts.filter(post => !post.data.draft);
+
+
+// Function to calculate reading time (rough estimate)
+function calculateReadingTime(content: string): number {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(' ').length;
+  return Math.ceil(wordCount / wordsPerMinute);
+}
+
+const aboutEntry = await getEntry('about', 'index');
+const data = aboutEntry.data;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <SEO 
+      title="Blog"
+      description="Technical articles and insights on AI/ML, software development, and emerging technologies"
+      type="website"
+      author={data.name}
+      siteName={`${data.name}`}
+      siteTitle={data.name}
+      canonicalURL={Astro.url.toString()}
+    />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <ThemeScript />
+  </head>
+  <body class="bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
+    <div class="flex-1 p-8">
+      <div class="max-w-2xl mx-auto space-y-12">
+      <Header currentPage="blog" />
+
+      <!-- Search and Filters Section -->
+      <div class="space-y-4">
+        <!-- Search Bar -->
+        <div class="flex justify-end">
+          <input 
+            type="text" 
+            id="search-input"
+            placeholder="Search posts..."
+            class="w-64 px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Post Count -->
+        <div class="border-b border-gray-200 dark:border-gray-600 pb-6">
+          <span id="post-count" class="text-xs font-mono text-gray-500 dark:text-gray-400">
+            Showing {publishedPosts.length} {publishedPosts.length === 1 ? 'post' : 'posts'}
+          </span>
+        </div>
+      </div>
+
+      <!-- Blog Posts -->
+      <div class="space-y-10 md:space-y-12">
+        {publishedPosts.map((post) => {
+          const readingTime = calculateReadingTime(post.body);
+          const description = extractDescription(post.body);
+          return (
+            <a 
+              href={`/blog/${post.slug}`}
+              class="blog-post block bg-gray-50/30 dark:bg-neutral-700/30 border border-gray-200/50 dark:border-gray-600/50 rounded-lg p-6 md:p-8 transition-all duration-200 hover:bg-gray-50/50 dark:hover:bg-neutral-700/50 hover:border-gray-300/50 dark:hover:border-gray-500/50 hover:shadow-sm"
+              data-title={post.data.title.toLowerCase()}
+              data-description={description.toLowerCase()}
+            >
+              <article class="space-y-2">
+                <div class="flex items-center gap-4 text-xs">
+                  <time datetime={post.data.pubDate.toISOString()} class="text-gray-500 dark:text-gray-400 font-mono">
+                    {post.data.pubDate.toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: '2-digit', 
+                      day: '2-digit' 
+                    })}
+                  </time>
+                  <span class="text-gray-400 dark:text-gray-500">·</span>
+                  <span class="text-gray-500 dark:text-gray-400 font-mono">{readingTime} min read</span>
+                </div>
+                
+                {/* Consistent Horizontal List Layout - All Viewport Sizes */}
+                <div class="flex gap-3 sm:gap-4 md:gap-6 items-start">
+                  <div class="flex-1 min-w-0 space-y-1 sm:space-y-2">
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100 leading-tight hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                      {post.data.title}
+                    </h2>
+                    
+                    <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2 sm:line-clamp-3">
+                      {description}
+                    </p>
+                  </div>
+
+                  {/* Hero Image - Consistently on Right, Scales with Viewport */}
+                  {post.data.heroImage && (
+                    <div class="flex-shrink-0 w-20 sm:w-28 md:w-40">
+                      <img 
+                        src={post.data.heroImage} 
+                        alt={post.data.title}
+                        class="w-full h-16 sm:h-20 md:h-24 object-cover rounded shadow-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+              </article>
+            </a>
+          );
+        })}
+        
+        {publishedPosts.length === 0 && (
+          <div class="text-center py-16 space-y-4">
+            <p class="text-gray-500 dark:text-gray-400 font-light">No articles published yet.</p>
+            <a href="/" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors font-mono text-sm tracking-wider uppercase">
+              ← Back to home
+            </a>
+          </div>
+        )}
+      </div>
+      </div>
+    </div>
+  </body>
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+  
+  <script>
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    const blogPosts = document.querySelectorAll('.blog-post');
+    const postCount = document.getElementById('post-count');
+
+    function updatePostCount(count) {
+      if (postCount) {
+        postCount.textContent = `Showing ${count} ${count === 1 ? 'post' : 'posts'}`;
+      }
+    }
+
+    function filterPosts() {
+      const searchTerm = searchInput.value.toLowerCase();
+      let visibleCount = 0;
+
+      blogPosts.forEach(post => {
+        const title = post.dataset.title || '';
+        const description = post.dataset.description || '';
+
+        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+
+        if (matchesSearch) {
+          post.style.display = 'block';
+          visibleCount++;
+        } else {
+          post.style.display = 'none';
+        }
+      });
+
+      // Update post count
+      updatePostCount(visibleCount);
+
+      // Show message if no posts match
+      const noResults = document.getElementById('no-results');
+      if (visibleCount === 0) {
+        if (!noResults) {
+          const message = document.createElement('div');
+          message.id = 'no-results';
+          message.className = 'text-center py-8 text-gray-500 font-light';
+          message.innerHTML = 'No posts match your search.';
+          document.querySelector('.space-y-8').appendChild(message);
+        }
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    // Search input listener
+    searchInput.addEventListener('input', filterPosts);
+  </script>
+
+  <Footer />
+</html>

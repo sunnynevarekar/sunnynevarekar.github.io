@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="115" fill="#222"/>
+    <text x="256" y="320" text-anchor="middle" fill="#FFF" font-family="Roboto Mono, monospace" font-size="240" font-weight="400" dominant-baseline="middle">SN</text>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            rect { fill: #222; }
+            text { fill: #FFF; }
+        }
+        @media (prefers-color-scheme: light) {
+            rect { fill: #222; }
+            text { fill: #FFF; }
+        }
+    </style>
+</svg>

@@ -1,0 +1,2 @@
+# This file ensures the blog-assets directory structure is preserved in git
+# while excluding actual blog content and assets

@@ -1,0 +1,14 @@
+---
+import { getEntry } from 'astro:content';
+
+const aboutEntry = await getEntry('about', 'index');
+const data = aboutEntry.data;
+---
+
+<footer class="py-6">
+  <div class="max-w-2xl mx-auto px-8">
+    <div class="text-center text-sm text-gray-500 dark:text-gray-400 font-mono">
+      © 2025 {data.name}
+    </div>
+  </div>
+</footer>

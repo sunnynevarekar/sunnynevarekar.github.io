@@ -1,0 +1,92 @@
+---
+// Inline theme script to prevent FOUC
+---
+
+<script is:inline>
+  // Theme management - runs immediately before page render
+  (function() {
+    function getThemePreference() {
+      // Check localStorage first
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+      }
+      // Default to system preference
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      // Store preference
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('theme', theme);
+      }
+    }
+
+    // Set initial theme
+    const theme = getThemePreference();
+    setTheme(theme);
+
+    // Make theme functions globally available
+    window.toggleTheme = function() {
+      const currentTheme = localStorage.getItem('theme') || getThemePreference();
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      updateToggleButton(newTheme);
+    };
+
+    function updateToggleButton(theme) {
+      // Update desktop theme toggle
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) {
+        const sunIcon = toggle.querySelector('.sun-icon');
+        const moonIcon = toggle.querySelector('.moon-icon');
+        
+        if (theme === 'dark') {
+          sunIcon?.classList.remove('hidden');
+          moonIcon?.classList.add('hidden');
+          toggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+          sunIcon?.classList.add('hidden');
+          moonIcon?.classList.remove('hidden');
+          toggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+      }
+
+      // Update mobile theme toggle
+      const mobileToggle = document.getElementById('mobile-theme-toggle');
+      if (mobileToggle) {
+        const mobileSunIcon = mobileToggle.querySelector('.mobile-sun-icon');
+        const mobileMoonIcon = mobileToggle.querySelector('.mobile-moon-icon');
+        
+        if (theme === 'dark') {
+          mobileSunIcon?.classList.remove('hidden');
+          mobileMoonIcon?.classList.add('hidden');
+          mobileToggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+          mobileSunIcon?.classList.add('hidden');
+          mobileMoonIcon?.classList.remove('hidden');
+          mobileToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+      }
+    }
+
+    // Listen for system theme changes when no manual preference is set
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+        updateToggleButton(e.matches ? 'dark' : 'light');
+      }
+    });
+
+    // Initialize toggle button state after DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentTheme = getThemePreference();
+      updateToggleButton(currentTheme);
+    });
+  })();
+</script>

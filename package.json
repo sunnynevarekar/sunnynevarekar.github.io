@@ -1,0 +1,28 @@
+{
+  "name": "personal-website",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "new-post": "node scripts/new-post.js",
+    "blog:assets": "node scripts/blog-assets.js",
+    "blog:posts": "node scripts/blog-assets.js posts",
+    "blog:cleanup": "node scripts/blog-assets.js cleanup",
+    "blog:audit": "node scripts/blog-assets.js audit",
+    "blog:delete": "node scripts/blog-assets.js delete",
+    "deploy:vercel": "npm run build && vercel --prod",
+    "deploy:vercel-preview": "npm run build && vercel",
+    "deploy:setup-vercel": "vercel"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.3",
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.4.2",
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "astro": "^5.12.8"
+  }
+}

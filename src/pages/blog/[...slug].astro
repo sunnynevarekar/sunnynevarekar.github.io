@@ -1,0 +1,231 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import ThemeScript from '../../components/ThemeScript.astro';
+import SEO from '../../components/SEO.astro';
+import { extractDescription } from '../../utils/extractDescription.js';
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection('blog');
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+// Calculate reading time
+function calculateReadingTime(content: string): number {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(' ').length;
+  return Math.ceil(wordCount / wordsPerMinute);
+}
+
+const readingTime = calculateReadingTime(post.body);
+const description = extractDescription(post.body);
+const aboutEntry = await getEntry('about', 'index');
+const data = aboutEntry.data;
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <SEO 
+      title={post.data.title}
+      description={description}
+      image={post.data.heroImage}
+      type="article"
+      publishedTime={post.data.pubDate}
+      author={data.name}
+      siteName={`${data.name}`}
+      siteTitle={data.name}
+      canonicalURL={Astro.url.toString()}
+    />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <ThemeScript />
+  </head>
+  <body class="bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 antialiased min-h-screen flex flex-col">
+    <div class="flex-1 p-8">
+      <div class="max-w-2xl mx-auto space-y-20">
+      <Header currentPage="blog-post" />
+
+      <!-- Article -->
+      <article class="space-y-8">
+        <!-- Article Header -->
+        <header>
+          <!-- Hero Image -->
+          {post.data.heroImage && (
+            <div class="pb-8">
+              <img 
+                src={post.data.heroImage} 
+                alt={post.data.title}
+                class="w-full rounded-lg shadow-sm"
+              />
+            </div>
+          )}
+        </header>
+
+        <!-- Title and Metadata -->
+        <div class="space-y-3 mb-8">
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+            {post.data.title}
+          </h1>
+          <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+              })}
+            </time>
+            <span class="text-gray-400 dark:text-gray-500">·</span>
+            <span>{readingTime} min read</span>
+          </div>
+        </div>
+        
+        <!-- Article Content -->
+        <div class="prose max-w-none dark:prose-invert">
+          <Content />
+        </div>
+
+        <!-- Social Sharing -->
+        <footer class="border-t border-gray-200 dark:border-gray-600 pt-6 mt-8">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-mono text-gray-600 dark:text-gray-400 uppercase tracking-wider font-medium">Share</span>
+            <div class="flex gap-6">
+              <a 
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.toString())}`}
+                target="_blank"
+                rel="noopener"
+                class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors font-mono text-sm tracking-wider uppercase font-medium"
+              >
+                Twitter
+              </a>
+              <a 
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.toString())}`}
+                target="_blank" 
+                rel="noopener"
+                class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors font-mono text-sm tracking-wider uppercase font-medium"
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      </div>
+    </div>
+  </body>
+  
+  <style is:global>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Compact, readable prose typography */
+    .prose {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    
+    /* Tighter heading hierarchy */
+    .prose h2 {
+      @apply text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3 tracking-tight leading-tight;
+    }
+    
+    .prose h3 {
+      @apply text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100 mt-6 mb-2 tracking-tight leading-tight;
+    }
+    
+    .prose h4 {
+      @apply text-base font-medium text-gray-900 dark:text-gray-100 mt-5 mb-2 tracking-tight;
+    }
+    
+    /* Tighter paragraph and list spacing */
+    .prose p {
+      @apply mb-3 text-gray-700 dark:text-gray-300;
+      line-height: 1.65;
+    }
+    
+    .prose ul, .prose ol {
+      @apply mb-3 space-y-0;
+    }
+    
+    .prose li {
+      @apply leading-relaxed text-gray-700 dark:text-gray-300;
+      line-height: 1.6;
+    }
+    
+    /* Enhanced blockquote styling */
+    .prose blockquote {
+      @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-4 italic text-gray-600 dark:text-gray-400 leading-relaxed;
+    }
+    
+    /* Enhanced strong text */
+    .prose strong {
+      @apply font-semibold text-gray-900 dark:text-gray-100;
+    }
+    
+    /* Clean figure caption styling - global styles to override Tailwind prose plugin */
+    .prose figure {
+      @apply my-6;
+      max-width: 32rem; /* Equivalent to max-w-lg */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Consolidate all image styles here */
+    .prose figure img, .prose > p > img { /* Target images in figures AND directly in paragraphs */
+      @apply rounded-sm shadow-sm my-6; /* my-6 handles vertical spacing */
+    }
+    
+    /* Use higher specificity to override Tailwind's prose :where() selector */
+    .prose figure figcaption {
+      @apply text-center w-3/4 mx-auto mt-2.5 text-sm italic !important;
+      @apply text-gray-500 dark:text-gray-400 !important;
+      line-height: 1.4 !important;
+    }
+    
+    /* Keep these styles for the code block's "chrome" */
+    .prose pre {
+      @apply p-4 rounded-lg my-4 shadow-md;
+      
+      /* Use transparent to let Shiki's theme handle the background */
+      @apply bg-transparent;
+    }
+
+    .prose video {
+      @apply rounded-lg my-6 shadow-sm max-w-lg mx-auto block;
+    }
+    .prose hr {
+      @apply border-gray-200 my-12;
+    }
+    .prose table {
+      @apply w-full border-collapse my-8;
+    }
+    .prose th, .prose td {
+      @apply border border-gray-300 px-4 py-2 text-left font-light;
+    }
+    .prose th {
+      @apply bg-gray-50 font-medium text-gray-900;
+    }
+  </style>
+
+  <Footer />
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "Your Name - AI/ML Engineer & Developer",
+  "short_name": "Your Name",
+  "description": "Personal portfolio and AI/ML blog featuring technical insights, tutorials, and projects.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "categories": ["technology", "education", "productivity"],
+  "lang": "en",
+  "dir": "ltr"
+}
