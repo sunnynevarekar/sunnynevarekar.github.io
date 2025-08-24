@@ -23,8 +23,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Test files and screenshots
-*.png
-
 # VS Code
 .vscode/
