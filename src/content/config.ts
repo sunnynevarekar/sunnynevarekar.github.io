@@ -15,6 +15,7 @@ const aboutCollection = defineCollection({
   type: 'content',
   schema: z.object({
     name: z.string(),
+    profileImage: z.string(),
     github: z.string(),
     linkedin: z.string(),
   })

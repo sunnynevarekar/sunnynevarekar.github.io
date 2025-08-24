@@ -50,8 +50,8 @@ const description = firstParagraph || `${data.name} - Personal website and blog`
           <div class="flex justify-center">
             <div class="w-48 h-48 rounded-full bg-gray-100 dark:bg-neutral-700 overflow-hidden shadow-sm">
               <img 
-                src="/blog-assets/building-autonomous-ai-agent-for-web-based-tasks/images/hero.jpg" 
-                alt="{data.name}"
+                src={data.profileImage}
+                alt={data.name}
                 class="w-full h-full object-cover"
               />
             </div>
@@ -65,8 +65,8 @@ const description = firstParagraph || `${data.name} - Personal website and blog`
         <div class="hidden md:block relative">
           <div class="float-right ml-10 mb-8 w-56 h-56 rounded-full bg-gray-100 dark:bg-neutral-700 overflow-hidden shadow-sm">
             <img 
-              src="/blog-assets/building-autonomous-ai-agent-for-web-based-tasks/images/hero.jpg" 
-              alt="{data.name}"
+              src={data.profileImage}
+              alt={data.name}
               class="w-full h-full object-cover"
             />
           </div>
