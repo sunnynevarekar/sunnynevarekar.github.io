@@ -129,18 +129,18 @@ The above demo showcases several crucial properties working in concert to solve 
 - **What it is**: The agent was given a single, high-level goal "Search jobs for the role of Data Scientist in India with a salary between 50 LPA to 100 LPA". In Step 1, its thought process shows it correctly decomposed this goal into a logical sequence of sub-tasks: (1) Perform the initial search, and (2) Apply the salary filter on the next page.
 - **Why it's crucial**: This demonstrates true reasoning. It didn't just look for a "salary" field on the homepage; it correctly inferred that filtering is a secondary step that happens after a search, showcasing its ability to form a high-level strategy.
 
-2. Intelligent Action Batching and State Awareness:
+2. **Intelligent Action Batching and State Awareness**:
 
 - **What it is**: The agent's controller code correctly executed multiple actions from a single plan when the state was stable, but immediately stopped when the state changed.
 In Step 1, it executed two TYPE commands without needing a new LLM call, but correctly broke the plan after the state-changing CLICK command. The same thing happened in Step 4, where it correctly grouped the two checkbox CLICKs with the final, state-changing "Apply" CLICK.
 - **Why it's crucial**: This is the "best of both worlds" solution. It's efficient (fewer LLM calls) but also safe, as it never acts on stale information.
 
-3. Robust Environmental Perception and Self-Correction:
+3. **Robust Environmental Perception and Self-Correction**:
 
 - **What it is**: The agent is not just blindly following a plan; it's using the agent-state information to understand the "physics" of the page and adapt its strategy.
 In Step 2, the agent's thought correctly notes that the "View More" link is NOT_INTERACTABLE. Instead of failing, it correctly hypothesizes that the element is off-screen and that the appropriate action is to SCROLL. This shows it understands the meaning of the augmented state data.
 
-4. Task Completion and Loop Avoidance:
+4. **Task Completion and Loop Avoidance**:
 
 - **What it is**: The agent correctly recognizes when it has fulfilled all the criteria of the task and terminates successfully.
 In Step 5, after applying the filters, the agent assesses the state and concludes that the task is complete. 
