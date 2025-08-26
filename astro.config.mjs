@@ -11,7 +11,7 @@ export default defineConfig({
     tailwind(),
     sitemap()
   ],
-  site: 'https://sunnynevarekar.github.io',
+  site: 'https://sunnynevarekar.com',
   // Only use base path in production for GitHub Pages
   base: undefined,
   output: 'static',
