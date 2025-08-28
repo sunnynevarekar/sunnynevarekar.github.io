@@ -1,7 +1,6 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-import { extractDescription } from '../utils/extractDescription.js';
 import { getCollection, getEntry } from 'astro:content';
+import { extractDescription } from '../utils/extractDescription.js';
 
 export async function GET(context) {
   const blog = await getCollection('blog');
