@@ -5,7 +5,7 @@ import { getCollection, getEntry } from 'astro:content';
 
 export async function GET(context) {
   const blog = await getCollection('blog');
-  const aboutEntry = await getEntry('about', 'index');                                                         │ │
+  const aboutEntry = await getEntry('about', 'index');
   const authorName = aboutEntry.data.name;   
   
   // Filter out draft posts and sort by date
