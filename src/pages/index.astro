@@ -26,8 +26,7 @@ const description = firstParagraph || `${data.name} - Personal website and blog`
       description={description}
       type="website"
       author={data.name}
-      siteName={`${data.name}`}
-      siteTitle={data.name}
+      siteName={data.name}
       canonicalURL={Astro.url.toString()}
     />
     
@@ -43,40 +42,27 @@ const description = firstParagraph || `${data.name} - Personal website and blog`
       <Header currentPage="home" />
 
 
-      <!-- Magazine-Style About Section -->
-      <section class="max-w-3xl mx-auto header-margin">
-        <!-- Mobile Layout: Stacked -->
-        <div class="block md:hidden space-y-6">
-          <div class="flex justify-center">
-            <div class="w-48 h-48 rounded-full bg-gray-100 dark:bg-neutral-700 overflow-hidden shadow-sm">
+      <!-- About Section -->
+      <section>
+        <div class="flex flex-col md:flex-row-reverse gap-8 md:gap-12 items-center md:items-start">
+          <!-- Profile Image -->
+          <div class="flex-shrink-0">
+            <div class="w-48 h-48 md:w-56 md:h-56 rounded-full bg-gray-100 dark:bg-neutral-700 overflow-hidden shadow-sm">
               <img 
-                src={data.profileImage}
+                src={data.profileImage} 
                 alt={data.name}
+                width="224"
+                height="224"
+                loading="eager"
                 class="w-full h-full object-cover"
               />
             </div>
           </div>
-          <div class="prose prose-lg max-w-none text-left dark:prose-invert">
+          
+          <!-- Content -->
+          <div class="flex-1 prose prose-lg max-w-none text-left dark:prose-invert">
             <Content />
           </div>
-        </div>
-
-        <!-- Desktop Layout: Floated -->
-        <div class="hidden md:block relative">
-          <div class="float-right ml-10 mb-8 w-56 h-56 rounded-full bg-gray-100 dark:bg-neutral-700 overflow-hidden shadow-sm">
-            <img 
-              src={data.profileImage}
-              alt={data.name}
-              class="w-full h-full object-cover"
-            />
-          </div>
-          
-          <div class="prose prose-lg max-w-none text-left dark:prose-invert">
-            <Content />
-          </div>
-          
-          <!-- Clear float -->
-          <div class="clear-both"></div>
         </div>
       </section>
       </div>
@@ -86,30 +72,12 @@ const description = firstParagraph || `${data.name} - Personal website and blog`
   </body>
   
   <style>
+    /* Font families - applied via Tailwind classes in HTML */
     body {
       font-family: 'Inter', sans-serif;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
-    }
-    
-    /* Enhanced prose styles for better hierarchy */
-    .prose {
-      @apply text-gray-700 dark:text-gray-300 leading-loose font-normal text-base md:text-lg;
-    }
-    .prose p {
-      @apply mb-6;
-    }
-    .prose strong {
-      @apply font-semibold text-gray-900 dark:text-gray-100;
-    }
-    .prose em {
-      @apply font-normal text-gray-600 dark:text-gray-400;
-    }
-    
-    /* Override space-y for header margin */
-    .header-margin {
-      margin-top: 4rem !important;
     }
   </style>
 </html>
