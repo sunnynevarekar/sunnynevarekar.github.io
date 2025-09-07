@@ -17,7 +17,7 @@ A clean, minimal personal website and blog platform built with Astro. Designed f
 - **Dark Mode Support**: Toggle between light and dark themes with system preference detection
 - **Mobile Navigation**: Responsive hamburger menu for mobile screens with touch-optimized interface
 - **System Fonts**: Native typography for optimal performance and readability
-- **Responsive Design**: Mobile-first approach with Tailwind CSS and adaptive navigation
+- **Responsive Design**: Mobile-first approach with modern flexbox layouts and adaptive navigation
 - **Professional Layout**: Elegant, confident design without unnecessary decorations
 - **Focus on Reading**: Optimized for comfortable content consumption across all devices
 
@@ -26,6 +26,8 @@ A clean, minimal personal website and blog platform built with Astro. Designed f
 - **SEO Optimized**: Essential meta tags and social sharing with auto-generated descriptions
 - **RSS Feed**: Automatically generated for subscribers with extracted content
 - **Minimal Dependencies**: System fonts and essential features only
+- **Optimized Images**: Proper dimensions and loading attributes to prevent layout shift
+- **Clean CSS**: Streamlined styling without redundant code or anti-patterns
 
 ### Developer Experience
 - **TypeScript**: Full type safety throughout the project
@@ -296,6 +298,7 @@ Edit `src/content/about/index.mdx` to update your personal information using ric
 ```yaml
 ---
 name: "Your Name"
+profileImage: "/images/profile.jpg"  # Required: Path to your profile image
 github: "https://github.com/username"
 linkedin: "https://linkedin.com/in/username"
 ---
